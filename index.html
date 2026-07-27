@@ -162,11 +162,8 @@
           ? `https://cdn.discordapp.com/avatars/${data.discord.id}/${data.discord.avatar}.png?size=64`
           : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
-        if (statusEl) {
-          let text = data.roblox && data.roblox.robloxId
-            ? "Roblox linked via Bloxlink"
-            : "No Roblox account linked in Bloxlink";
-          statusEl.textContent = text;
+        if (statusEl && data.roblox && data.roblox.robloxId) {
+          statusEl.textContent = "Roblox linked via Bloxlink";
           statusEl.hidden = false;
         }
       }
