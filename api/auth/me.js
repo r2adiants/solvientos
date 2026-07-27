@@ -1,7 +1,3 @@
-// /api/auth/me.js
-// Reads the session cookie set during OAuth and returns it as JSON
-// so the frontend can display "logged in as ..." without exposing tokens.
-
 export default function handler(req, res) {
   const cookieHeader = req.headers.cookie || "";
   const match = cookieHeader.match(/solviento_session=([^;]+)/);
