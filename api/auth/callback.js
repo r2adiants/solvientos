@@ -6,6 +6,7 @@ export default async function handler(req, res) {
   }
 
   try {
+
     const tokenRes = await fetch("https://discord.com/api/oauth2/token", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -43,28 +44,14 @@ export default async function handler(req, res) {
     let roblox = null;
     try {
       const bloxRes = await fetch(
-        `https://api.blox.link/v4/public/discord-to-roblox/${discordUser.id}`,
+        `https://api.blox.link/v4/public/guilds/${process.env.DISCORD_GUILD_ID}/discord-to-roblox/${discordUser.id}`,
         { headers: { Authorization: process.env.BLOXLINK_API_KEY } }
       );
       const bloxData = await bloxRes.json();
-
       console.log("Bloxlink raw response:", JSON.stringify(bloxData));
 
-      if (bloxRes.ok) {
-
-        const robloxId =
-          bloxData.robloxID ||
-          bloxData.robloxId ||
-          bloxData.primaryAccount ||
-          (bloxData.resolved && bloxData.resolved.robloxID) ||
-          (bloxData.user && bloxData.user.robloxId) ||
-          null;
-
-        if (robloxId) {
-          roblox = { robloxId };
-        }
-      } else {
-        console.warn("Bloxlink lookup failed:", bloxData);
+      if (bloxRes.ok && bloxData.robloxID) {
+        roblox = { robloxId: bloxData.robloxID };
       }
     } catch (bloxErr) {
       console.warn("Bloxlink lookup error:", bloxErr);
