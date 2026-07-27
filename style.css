@@ -116,7 +116,7 @@ nav {
   background-color: #F0C562;
 }
 
-/* Hero */
+
 .hero {
   position: relative;
   min-height: 100vh;
@@ -245,7 +245,7 @@ h1 {
   color: #F3E9D2;
 }
 
-/* Hero image + wisps */
+
 .hero-image-wrap {
   position: relative;
   margin: 0 auto;
@@ -334,7 +334,7 @@ h1 {
   }
 }
 
-/* Menu / careers cards */
+
 .teasers {
   padding: 112px 24px;
 }
@@ -375,7 +375,7 @@ h1 {
   color: #D9CBA8;
 }
 
-/* Footer */
+
 footer {
   border-top: 1px solid #3D3226;
   padding: 64px 24px;
@@ -410,5 +410,18 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   .sunburst, .wisp {
     animation: none;
+  }
+}
+
+.login-status {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #4A9285;
+}
+
+@media (min-width: 768px) {
+  .login-status {
+    text-align: left;
   }
 }
