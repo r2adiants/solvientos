@@ -23,7 +23,7 @@
         <a href="#menu">Menu</a>
         <a href="#careers">Careers</a>
       </div>
-      <a href="#" class="btn btn-teal">Log in with Discord</a>
+      <a href="#" id="discord-login-nav" class="btn btn-teal">Log in with Discord</a>
     </nav>
   </header>
 
@@ -35,9 +35,10 @@
         <h1 class="font-display">Where the sun<br />meets the wind.</h1>
         <p>Solviento's is a management roleplay restaurant on Roblox — run orders, serve the community, and join the crew.</p>
         <div class="hero-actions">
-          <a href="#" class="btn btn-gold">Log in with Discord</a>
+          <a href="#" id="discord-login-hero" class="btn btn-gold">Log in with Discord</a>
           <a href="#story" class="link-underline">Read our story</a>
         </div>
+        <p id="login-status" class="login-status" hidden></p>
       </div>
 
       <div class="hero-image-wrap">
@@ -82,11 +83,54 @@
     <div class="footer-inner">
       <img src="logo.png" alt="Solviento's" width="56" height="56" />
       <h4 class="font-display">Join the crew.</h4>
-      <a href="#" class="btn btn-teal">Log in with Discord</a>
+      <a href="#" id="discord-login-footer" class="btn btn-teal">Log in with Discord</a>
       <p class="footer-note">© 2026 Solviento's. Roleplay project, no real-world affiliation.</p>
     </div>
   </footer>
 
 </main>
+
+<script>
+
+  const DISCORD_CLIENT_ID = "1530349314625507409";
+  const REDIRECT_URI = window.location.origin + "/api/auth/callback";
+  const DISCORD_AUTH_URL =
+    "https://discord.com/api/oauth2/authorize" +
+    "?client_id=" + DISCORD_CLIENT_ID +
+    "&redirect_uri=" + encodeURIComponent(REDIRECT_URI) +
+    "&response_type=code" +
+    "&scope=identify";
+
+  document.querySelectorAll(
+    "#discord-login-nav, #discord-login-hero, #discord-login-footer"
+  ).forEach((btn) => {
+    btn.href = DISCORD_AUTH_URL;
+  });
+
+
+  fetch("/api/auth/me")
+    .then((r) => r.json())
+    .then((data) => {
+      const statusEl = document.getElementById("login-status");
+      if (!statusEl) return;
+
+      if (data.loggedIn) {
+        const discordName = data.discord.global_name || data.discord.username;
+        let text = "Logged in as " + discordName + " (Discord)";
+
+        if (data.roblox && (data.roblox.robloxID || data.roblox.primaryAccount)) {
+          text += " · Roblox linked via Bloxlink";
+        } else {
+          text += " · No Roblox account linked in Bloxlink";
+        }
+
+        statusEl.textContent = text;
+        statusEl.hidden = false;
+      }
+    })
+    .catch(() => {
+
+    });
+</script>
 </body>
 </html>
