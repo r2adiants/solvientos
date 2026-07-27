@@ -24,6 +24,18 @@
         <a href="#careers">Careers</a>
       </div>
       <a href="#" id="discord-login-nav" class="btn btn-teal">Log in with Discord</a>
+      <div id="account-widget" class="account-widget" hidden>
+        <button id="account-toggle" class="account-toggle" type="button">
+          <img id="account-avatar" class="account-avatar" alt="" />
+          <span id="account-name"></span>
+          <svg class="account-caret" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <div id="account-menu" class="account-menu" hidden>
+          <button id="account-disconnect" class="account-disconnect" type="button">Disconnect</button>
+        </div>
+      </div>
     </nav>
   </header>
 
@@ -101,10 +113,34 @@
     "&response_type=code" +
     "&scope=identify";
 
-  document.querySelectorAll(
+  const loginButtons = document.querySelectorAll(
     "#discord-login-nav, #discord-login-hero, #discord-login-footer"
-  ).forEach((btn) => {
+  );
+  loginButtons.forEach((btn) => {
     btn.href = DISCORD_AUTH_URL;
+  });
+
+  const navLoginBtn = document.getElementById("discord-login-nav");
+  const accountWidget = document.getElementById("account-widget");
+  const accountToggle = document.getElementById("account-toggle");
+  const accountMenu = document.getElementById("account-menu");
+  const accountAvatar = document.getElementById("account-avatar");
+  const accountName = document.getElementById("account-name");
+  const accountDisconnect = document.getElementById("account-disconnect");
+
+  accountToggle.addEventListener("click", () => {
+    accountMenu.hidden = !accountMenu.hidden;
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!accountWidget.contains(e.target)) {
+      accountMenu.hidden = true;
+    }
+  });
+
+  accountDisconnect.addEventListener("click", async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.reload();
   });
 
 
@@ -112,20 +148,27 @@
     .then((r) => r.json())
     .then((data) => {
       const statusEl = document.getElementById("login-status");
-      if (!statusEl) return;
 
       if (data.loggedIn) {
         const discordName = data.discord.global_name || data.discord.username;
-        let text = "Logged in as " + discordName + " (Discord)";
 
-        if (data.roblox && (data.roblox.robloxID || data.roblox.primaryAccount)) {
-          text += " · Roblox linked via Bloxlink";
-        } else {
-          text += " · No Roblox account linked in Bloxlink";
+
+        loginButtons.forEach((btn) => (btn.hidden = true));
+
+
+        accountWidget.hidden = false;
+        accountName.textContent = discordName;
+        accountAvatar.src = data.discord.avatar
+          ? `https://cdn.discordapp.com/avatars/${data.discord.id}/${data.discord.avatar}.png?size=64`
+          : `https://cdn.discordapp.com/embed/avatars/0.png`;
+
+        if (statusEl) {
+          let text = data.roblox && data.roblox.robloxId
+            ? "Roblox linked via Bloxlink"
+            : "No Roblox account linked in Bloxlink";
+          statusEl.textContent = text;
+          statusEl.hidden = false;
         }
-
-        statusEl.textContent = text;
-        statusEl.hidden = false;
       }
     })
     .catch(() => {
