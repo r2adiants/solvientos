@@ -289,7 +289,7 @@ h1 {
   100% { transform: translateY(-90px) translateX(30px) scaleX(1.6); opacity: 0; }
 }
 
-/* Dividers */
+
 .divider {
   height: 1px;
   max-width: 1152px;
@@ -297,7 +297,7 @@ h1 {
   background: repeating-linear-gradient(90deg, #3D3226 0px, #3D3226 2px, transparent 2px, transparent 6px);
 }
 
-/* Story */
+
 .story {
   padding: 112px 24px;
 }
@@ -375,7 +375,7 @@ h1 {
   color: #D9CBA8;
 }
 
-
+/* Footer */
 footer {
   border-top: 1px solid #3D3226;
   padding: 64px 24px;
@@ -424,4 +424,72 @@ footer {
   .login-status {
     text-align: left;
   }
+}
+
+.account-widget {
+  position: relative;
+}
+
+.account-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #3D3226;
+  background-color: #2A2118;
+  border-radius: 999px;
+  padding: 6px 14px 6px 6px;
+  color: #F3E9D2;
+  font-family: "Instrument Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.account-toggle:hover {
+  background-color: #33291D;
+}
+
+.account-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: block;
+}
+
+.account-caret {
+  color: #D9CBA8;
+  transition: transform 0.2s;
+}
+
+.account-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 140px;
+  background-color: #2A2118;
+  border: 1px solid #3D3226;
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.5);
+  z-index: 60;
+}
+
+.account-disconnect {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: #E0A93A;
+  font-family: "Instrument Sans", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.account-disconnect:hover {
+  background-color: rgba(224, 169, 58, 0.12);
 }
