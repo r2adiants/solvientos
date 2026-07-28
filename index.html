@@ -50,7 +50,6 @@
           <a href="#" id="discord-login-hero" class="btn btn-gold">Log in with Discord</a>
           <a href="#story" class="link-underline">Read our story</a>
         </div>
-        <p id="login-status" class="login-status" hidden></p>
       </div>
 
       <div class="hero-image-wrap">
@@ -147,29 +146,20 @@
   fetch("/api/auth/me")
     .then((r) => r.json())
     .then((data) => {
-      const statusEl = document.getElementById("login-status");
-
       if (data.loggedIn) {
         const discordName = data.discord.global_name || data.discord.username;
 
 
         loginButtons.forEach((btn) => (btn.hidden = true));
 
-
         accountWidget.hidden = false;
         accountName.textContent = discordName;
         accountAvatar.src = data.discord.avatar
           ? `https://cdn.discordapp.com/avatars/${data.discord.id}/${data.discord.avatar}.png?size=64`
           : `https://cdn.discordapp.com/embed/avatars/0.png`;
-
-        if (statusEl && data.roblox && data.roblox.robloxId) {
-          statusEl.textContent = "Roblox linked via Bloxlink";
-          statusEl.hidden = false;
-        }
       }
     })
     .catch(() => {
-
     });
 </script>
 </body>
