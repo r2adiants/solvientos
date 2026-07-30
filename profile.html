@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profile — Solviento's</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+
+  <header>
+    <nav>
+      <a href="index.html" class="brand">
+        <img src="logo.png" alt="Solviento's" width="40" height="40" />
+        <span class="font-display">Solviento's</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html#story">Story</a>
+        <a href="index.html#menu">Menu</a>
+        <a href="index.html#careers">Careers</a>
+      </div>
+      <a href="#" id="discord-login-nav" class="btn btn-teal">Log in with Discord</a>
+      <div id="account-widget" class="account-widget" hidden>
+        <button id="account-toggle" class="account-toggle" type="button">
+          <img id="account-avatar" class="account-avatar" alt="" />
+          <span id="account-name"></span>
+          <svg class="account-caret" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <div id="account-menu" class="account-menu" hidden>
+          <a href="profile.html" class="account-menu-item">Profile</a>
+          <button id="account-disconnect" class="account-menu-item account-menu-item-danger" type="button">Log out</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="profile-page">
+    <div class="profile-page-inner">
+
+      <div id="profile-loading" class="profile-loading">Loading your profile…</div>
+
+      <div id="profile-not-logged-in" class="profile-not-logged-in" hidden>
+        <p>You're not logged in.</p>
+        <a href="#" id="profile-login-btn" class="btn btn-gold">Log in with Discord</a>
+      </div>
+
+      <div id="profile-content" class="profile-content" hidden>
+        <h1 class="font-display">Your Profile</h1>
+
+        <div class="info-panel">
+          <div class="info-panel-header">
+            <img id="p-discord-avatar" class="info-panel-avatar" alt="" />
+            <div>
+              <h2 class="font-display">Discord</h2>
+              <p class="info-panel-sub">Linked account</p>
+            </div>
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">User ID</span>
+              <span id="p-discord-id" class="info-value"></span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Username</span>
+              <span id="p-discord-username" class="info-value"></span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Display Name</span>
+              <span id="p-discord-display" class="info-value"></span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Account Created</span>
+              <span id="p-discord-created" class="info-value"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-panel">
+          <div class="info-panel-header">
+            <img id="p-roblox-avatar" class="info-panel-avatar" alt="" />
+            <div>
+              <h2 class="font-display">Roblox</h2>
+              <p class="info-panel-sub">Linked via Bloxlink</p>
+            </div>
+          </div>
+          <div id="p-roblox-grid" class="info-grid">
+            <div class="info-item">
+              <span class="info-label">User ID</span>
+              <span id="p-roblox-id" class="info-value"></span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Username</span>
+              <span id="p-roblox-username" class="info-value"></span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Display Name</span>
+              <span id="p-roblox-display" class="info-value"></span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Group Rank</span>
+              <span id="p-roblox-rank" class="info-value"></span>
+            </div>
+          </div>
+          <p id="p-roblox-none" class="info-panel-empty" hidden>No Roblox account linked in Bloxlink.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="auth.js"></script>
+<script>
+  function discordIdToDate(id) {
+    const DISCORD_EPOCH = 1420070400000n;
+    const timestamp = (BigInt(id) >> 22n) + DISCORD_EPOCH;
+    const date = new Date(Number(timestamp));
+    return date.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+  }
+
+  initAccountWidget((data, discordName, discordAvatarUrl) => {
+    document.getElementById("profile-loading").hidden = true;
+
+    if (!data) {
+      document.getElementById("profile-not-logged-in").hidden = false;
+      const DISCORD_CLIENT_ID = "1530349314625507409";
+      const REDIRECT_URI = window.location.origin + "/api/auth/callback";
+      document.getElementById("profile-login-btn").href =
+        "https://discord.com/api/oauth2/authorize" +
+        "?client_id=" + DISCORD_CLIENT_ID +
+        "&redirect_uri=" + encodeURIComponent(REDIRECT_URI) +
+        "&response_type=code" +
+        "&scope=identify";
+      return;
+    }
+
+    document.getElementById("profile-content").hidden = false;
+
+    document.getElementById("p-discord-avatar").src = discordAvatarUrl;
+    document.getElementById("p-discord-id").textContent = data.discord.id;
+    document.getElementById("p-discord-username").textContent = data.discord.username;
+    document.getElementById("p-discord-display").textContent =
+      data.discord.global_name || data.discord.username;
+    document.getElementById("p-discord-created").textContent = discordIdToDate(data.discord.id);
+
+    if (data.roblox && data.roblox.id) {
+      document.getElementById("p-roblox-avatar").src = data.roblox.avatarUrl || "";
+      document.getElementById("p-roblox-id").textContent = data.roblox.id;
+      document.getElementById("p-roblox-username").textContent = data.roblox.username || "—";
+      document.getElementById("p-roblox-display").textContent = data.roblox.displayName || "—";
+      document.getElementById("p-roblox-rank").textContent = data.roblox.groupRole
+        ? data.roblox.groupRole.rankName
+        : "Not a member of the group";
+    } else {
+      document.getElementById("p-roblox-grid").hidden = true;
+      document.getElementById("p-roblox-none").hidden = false;
+    }
+  });
+</script>
+</body>
+</html>
