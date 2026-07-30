@@ -12,17 +12,23 @@ async function fetchTeamData() {
 }
 
 async function postTeamAction(payload) {
-  const res = await fetch("/api/team", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  if (!res.ok) {
-    alert("Action failed. You may not be signed in as the admin.");
+  try {
+    const res = await fetch("/api/team", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const errBody = await res.json().catch(() => ({}));
+      alert("Save failed: " + (errBody.error || res.status + " " + res.statusText));
+      return null;
+    }
+    teamData = await res.json();
+    return teamData;
+  } catch (err) {
+    alert("Save failed: network error. Check your connection and try again.");
     return null;
   }
-  teamData = await res.json();
-  return teamData;
 }
 
 function cardDiscordUrl(discordUserId) {
