@@ -41,9 +41,9 @@ function renderCard(card, section) {
 
   const avatar = document.createElement("div");
   avatar.className = "team-card-avatar";
-  if (card.robloxAvatarUrl) {
+  if (card.photoUrl) {
     const img = document.createElement("img");
-    img.src = card.robloxAvatarUrl;
+    img.src = card.photoUrl;
     img.alt = card.name;
     avatar.appendChild(img);
   }
@@ -214,8 +214,8 @@ function openCardModal(section, card) {
   document.getElementById("card-modal-title").textContent = card ? "Edit member" : "Add member";
   document.getElementById("card-name").value = card ? card.name : "";
   document.getElementById("card-role").value = card ? (card.role || "") : "";
+  document.getElementById("card-photo-url").value = card ? (card.photoUrl || "") : "";
   document.getElementById("card-roblox-username").value = card ? card.robloxUsername : "";
-  document.getElementById("card-roblox-id").value = card ? card.robloxUserId : "";
   document.getElementById("card-discord-id").value = card ? card.discordUserId : "";
   document.getElementById("card-email").value = card ? card.email : "";
 
@@ -259,8 +259,8 @@ function wireModal() {
     const payload = {
       name: document.getElementById("card-name").value.trim(),
       role: document.getElementById("card-role").value.trim(),
+      photoUrl: document.getElementById("card-photo-url").value.trim(),
       robloxUsername: document.getElementById("card-roblox-username").value.trim(),
-      robloxUserId: document.getElementById("card-roblox-id").value.trim(),
       discordUserId: document.getElementById("card-discord-id").value.trim(),
       email: document.getElementById("card-email").value.trim(),
       inlineWith: document.getElementById("card-inline").checked
