@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Our Team — Solviento's</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+
+  <header>
+    <nav>
+      <a href="/" class="brand">
+        <img src="logo.png" alt="Solviento's" width="36" height="36" />
+        <span class="font-display">Solviento's</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/applications">Applications</a>
+        <a href="/partners">Partners</a>
+        <a href="/team">Our Team</a>
+      </div>
+      <a href="#" id="discord-login-nav" class="btn btn-gold">Log in with Discord</a>
+      <div id="account-widget" class="account-widget" hidden>
+        <button id="account-toggle" class="account-toggle" type="button">
+          <img id="account-avatar" class="account-avatar" alt="" />
+          <span id="account-name"></span>
+          <svg class="account-caret" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+        <div id="account-menu" class="account-menu" hidden>
+          <a href="/profile" class="account-menu-item">Profile</a>
+          <button id="account-disconnect" class="account-menu-item account-menu-item-danger" type="button">Log out</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="team-page">
+    <div class="team-page-inner">
+      <p class="eyebrow">Our Team</p>
+      <h1 class="font-display">The people behind the house.</h1>
+
+      <div id="admin-bar" class="admin-bar" hidden>
+        <span class="admin-bar-label">Admin mode</span>
+        <button id="add-section-btn" class="btn btn-outline btn-small" type="button">+ Add section</button>
+      </div>
+
+      <div id="team-sections"></div>
+    </div>
+  </section>
+
+</main>
+
+<div id="card-modal" class="modal-overlay" hidden>
+  <div class="modal">
+    <h3 class="font-display" id="card-modal-title">Add member</h3>
+    <label class="field-label">Name</label>
+    <input id="card-name" class="field-input" type="text" placeholder="Display name" />
+
+    <label class="field-label">Roblox username</label>
+    <input id="card-roblox-username" class="field-input" type="text" placeholder="e.g. builderman" />
+
+    <label class="field-label">Roblox user ID</label>
+    <input id="card-roblox-id" class="field-input" type="text" placeholder="e.g. 156" />
+
+    <label class="field-label">Discord user ID (optional)</label>
+    <input id="card-discord-id" class="field-input" type="text" placeholder="Leave blank to hide Discord button" />
+
+    <label class="field-label">Email (optional)</label>
+    <input id="card-email" class="field-input" type="email" placeholder="Leave blank to hide Email button" />
+
+    <label class="field-checkbox">
+      <input id="card-inline" type="checkbox" />
+      Show inline with another card
+    </label>
+    <select id="card-inline-target" class="field-input" hidden></select>
+
+    <div class="modal-actions">
+      <button id="card-cancel" class="btn btn-outline btn-small" type="button">Cancel</button>
+      <button id="card-save" class="btn btn-gold btn-small" type="button">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="team.js"></script>
+<script>
+  initAccountWidget(initTeamPage);
+</script>
+</body>
+</html>
