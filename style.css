@@ -528,3 +528,260 @@ footer {
     animation: none;
   }
 }
+
+.team-page {
+  padding: 160px 24px 96px;
+  min-height: 100vh;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.team-page h1 {
+  font-size: 34px;
+  font-weight: 700;
+  color: #F2E9D8;
+  margin: 8px 0 40px;
+}
+
+.admin-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #221B15;
+  border: 1px solid #E8A33D;
+  border-radius: 12px;
+  padding: 12px 18px;
+  margin-bottom: 32px;
+}
+
+.admin-bar-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #E8A33D;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.btn-small {
+  padding: 7px 14px;
+  font-size: 13px;
+}
+
+.btn-danger {
+  color: #E8734D;
+  border-color: #5A362A;
+}
+.btn-danger:hover {
+  border-color: #E8734D;
+  color: #E8734D;
+}
+
+.team-section {
+  margin-bottom: 48px;
+}
+
+.team-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #3A2E22;
+  padding-bottom: 12px;
+}
+
+.team-section-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #F2E9D8;
+  margin: 0;
+}
+
+.team-section-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.team-cards-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.team-card-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+@media (min-width: 700px) {
+  .team-card-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.team-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #3A2E22;
+  background-color: #1D1712;
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+.team-card-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #221B15;
+  border: 1px solid #3A2E22;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.team-card-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.team-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.team-card-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: #F2E9D8;
+}
+
+.team-card-sub {
+  font-size: 13px;
+  color: #B8A88A;
+}
+
+.team-card-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.chip-btn {
+  display: inline-block;
+  border: 1px solid #3A2E22;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #F2E9D8;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.chip-btn:hover {
+  border-color: #E8A33D;
+  color: #E8A33D;
+}
+
+.team-card-edit {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #6B5D48;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.team-card-edit:hover {
+  color: #E8A33D;
+}
+
+.team-empty {
+  color: #B8A88A;
+  font-size: 15px;
+  padding: 32px 0;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(24, 19, 16, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+}
+
+.modal {
+  background-color: #1D1712;
+  border: 1px solid #3A2E22;
+  border-radius: 20px;
+  padding: 28px;
+  max-width: 420px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #F2E9D8;
+  margin: 0 0 20px;
+}
+
+.field-label {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #B8A88A;
+  margin: 14px 0 6px;
+}
+
+.field-input {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #221B15;
+  border: 1px solid #3A2E22;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #F2E9D8;
+  font-family: "Instrument Sans", sans-serif;
+  font-size: 14px;
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: #E8A33D;
+}
+
+.field-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #F2E9D8;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
