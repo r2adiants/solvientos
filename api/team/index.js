@@ -39,20 +39,6 @@ function genId() {
   return Math.random().toString(36).slice(2, 10);
 }
 
-async function resolveRobloxAvatar(robloxUserId) {
-  if (!robloxUserId) return "";
-  try {
-    const res = await fetch(
-      `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${robloxUserId}&size=150x150&format=Png&isCircular=false`
-    );
-    if (!res.ok) return "";
-    const data = await res.json();
-    return data && data.data && data.data[0] ? data.data[0].imageUrl : "";
-  } catch {
-    return "";
-  }
-}
-
 export default async function handler(req, res) {
   if (req.method === "GET") {
     const data = await getData();
@@ -100,14 +86,12 @@ export default async function handler(req, res) {
   if (req.method === "POST" && body.action === "addCard") {
     const section = data.sections.find((s) => s.id === body.sectionId);
     if (section) {
-      const avatarUrl = await resolveRobloxAvatar(body.robloxUserId);
       section.cards.push({
         id: genId(),
         name: body.name || "New Member",
         role: body.role || "",
+        photoUrl: body.photoUrl || "",
         robloxUsername: body.robloxUsername || "",
-        robloxUserId: body.robloxUserId || "",
-        robloxAvatarUrl: avatarUrl,
         discordUserId: body.discordUserId || "",
         email: body.email || "",
         inlineWith: body.inlineWith || null,
@@ -122,17 +106,13 @@ export default async function handler(req, res) {
     if (section) {
       const card = section.cards.find((c) => c.id === body.cardId);
       if (card) {
-        const robloxIdChanged = body.robloxUserId !== undefined && body.robloxUserId !== card.robloxUserId;
         card.name = body.name ?? card.name;
         card.role = body.role ?? card.role;
+        card.photoUrl = body.photoUrl ?? card.photoUrl;
         card.robloxUsername = body.robloxUsername ?? card.robloxUsername;
-        card.robloxUserId = body.robloxUserId ?? card.robloxUserId;
         card.discordUserId = body.discordUserId ?? card.discordUserId;
         card.email = body.email ?? card.email;
         card.inlineWith = body.inlineWith !== undefined ? body.inlineWith : card.inlineWith;
-        if (robloxIdChanged) {
-          card.robloxAvatarUrl = await resolveRobloxAvatar(card.robloxUserId);
-        }
       }
     }
     await saveData(data);
