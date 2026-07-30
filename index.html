@@ -33,34 +33,12 @@
           </svg>
         </button>
         <div id="account-menu" class="account-menu" hidden>
-          <div class="profile-card">
-            <div class="profile-header">
-              <img id="profile-avatar" class="profile-avatar" alt="" />
-              <div class="profile-names">
-                <span id="profile-display-name" class="profile-display-name"></span>
-                <span id="profile-username" class="profile-username"></span>
-              </div>
-            </div>
-            <div class="profile-divider"></div>
-            <div class="profile-row">
-              <span class="profile-label">Discord</span>
-              <span id="profile-discord-tag" class="profile-value"></span>
-            </div>
-            <div id="profile-roblox-block" class="profile-roblox-block" hidden>
-              <div class="profile-row">
-                <span class="profile-label">Roblox</span>
-                <span id="profile-roblox-name" class="profile-value"></span>
-              </div>
-              <div class="profile-row">
-                <span class="profile-label">Group Rank</span>
-                <span id="profile-roblox-rank" class="profile-value"></span>
-              </div>
-            </div>
-          </div>
-          <button id="account-disconnect" class="account-disconnect" type="button">Disconnect</button>
+          <a href="profile.html" class="account-menu-item">Profile</a>
+          <button id="account-disconnect" class="account-menu-item account-menu-item-danger" type="button">Log out</button>
         </div>
       </div>
     </nav>
+    
   </header>
 
   <section id="top" class="hero">
@@ -125,82 +103,9 @@
 
 </main>
 
+<script src="auth.js"></script>
 <script>
-  const DISCORD_CLIENT_ID = "1530349314625507409";
-  const REDIRECT_URI = window.location.origin + "/api/auth/callback";
-  const DISCORD_AUTH_URL =
-    "https://discord.com/api/oauth2/authorize" +
-    "?client_id=" + DISCORD_CLIENT_ID +
-    "&redirect_uri=" + encodeURIComponent(REDIRECT_URI) +
-    "&response_type=code" +
-    "&scope=identify";
-
-  const loginButtons = document.querySelectorAll(
-    "#discord-login-nav, #discord-login-hero, #discord-login-footer"
-  );
-  loginButtons.forEach((btn) => {
-    btn.href = DISCORD_AUTH_URL;
-  });
-
-  const navLoginBtn = document.getElementById("discord-login-nav");
-  const accountWidget = document.getElementById("account-widget");
-  const accountToggle = document.getElementById("account-toggle");
-  const accountMenu = document.getElementById("account-menu");
-  const accountAvatar = document.getElementById("account-avatar");
-  const accountName = document.getElementById("account-name");
-  const accountDisconnect = document.getElementById("account-disconnect");
-
-  accountToggle.addEventListener("click", () => {
-    accountMenu.hidden = !accountMenu.hidden;
-  });
-
-  document.addEventListener("click", (e) => {
-    if (!accountWidget.contains(e.target)) {
-      accountMenu.hidden = true;
-    }
-  });
-
-  accountDisconnect.addEventListener("click", async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    window.location.reload();
-  });
-
-  fetch("/api/auth/me")
-    .then((r) => r.json())
-    .then((data) => {
-      if (data.loggedIn) {
-        const discordName = data.discord.global_name || data.discord.username;
-        const discordAvatarUrl = data.discord.avatar
-          ? `https://cdn.discordapp.com/avatars/${data.discord.id}/${data.discord.avatar}.png?size=128`
-          : `https://cdn.discordapp.com/embed/avatars/0.png`;
-
-        loginButtons.forEach((btn) => (btn.hidden = true));
-
-        accountWidget.hidden = false;
-        accountName.textContent = discordName;
-        accountAvatar.src = discordAvatarUrl;
-
-        document.getElementById("profile-avatar").src = discordAvatarUrl;
-        document.getElementById("profile-display-name").textContent = discordName;
-        document.getElementById("profile-username").textContent = "@" + data.discord.username;
-        document.getElementById("profile-discord-tag").textContent = data.discord.username;
-
-        const robloxBlock = document.getElementById("profile-roblox-block");
-        if (data.roblox && data.roblox.username) {
-          document.getElementById("profile-roblox-name").textContent =
-            (data.roblox.displayName || data.roblox.username) +
-            " (@" + data.roblox.username + ")";
-
-          const rankEl = document.getElementById("profile-roblox-rank");
-          rankEl.textContent = data.roblox.groupRole
-            ? data.roblox.groupRole.rankName
-            : "Not a member of the group";
-
-          robloxBlock.hidden = false;
-        }
-      }
-    })
-    .catch(() => {});
+  initAccountWidget();
 </script>
 </body>
 </html>
