@@ -609,40 +609,40 @@ footer {
 }
 
 .team-cards-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  align-items: start;
 }
 
 .team-card-row {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
-
-@media (min-width: 700px) {
-  .team-card-row {
-    grid-template-columns: 1fr 1fr;
-  }
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  grid-column: span 2;
 }
 
 .team-card {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
+  text-align: center;
   border: 1px solid #3A2E22;
   background-color: #1D1712;
-  border-radius: 16px;
-  padding: 18px 20px;
+  border-radius: 22px;
+  padding: 44px 18px 22px;
 }
 
 .team-card-avatar {
-  width: 52px;
-  height: 52px;
+  position: absolute;
+  top: -34px;
+  width: 84px;
+  height: 84px;
   border-radius: 50%;
   background-color: #221B15;
-  border: 1px solid #3A2E22;
+  border: 3px solid #1D1712;
+  outline: 1px solid #3A2E22;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -657,9 +657,9 @@ footer {
 .team-card-info {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  flex: 1;
-  min-width: 0;
+  align-items: center;
+  gap: 3px;
+  margin-top: 8px;
 }
 
 .team-card-name {
@@ -682,7 +682,7 @@ footer {
 .team-card-actions {
   display: flex;
   gap: 8px;
-  flex-shrink: 0;
+  margin-top: 14px;
 }
 
 .chip-btn {
