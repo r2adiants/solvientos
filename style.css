@@ -554,6 +554,10 @@ footer {
   margin-bottom: 32px;
 }
 
+.admin-bar[hidden] {
+  display: none;
+}
+
 .admin-bar-label {
   font-size: 13px;
   font-weight: 600;
@@ -724,6 +728,10 @@ footer {
   justify-content: center;
   z-index: 100;
   padding: 24px;
+}
+
+.modal-overlay[hidden] {
+  display: none;
 }
 
 .modal {
