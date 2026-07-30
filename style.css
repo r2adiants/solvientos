@@ -668,6 +668,12 @@ footer {
   color: #F2E9D8;
 }
 
+.team-card-role {
+  font-size: 12px;
+  font-weight: 600;
+  color: #E8A33D;
+}
+
 .team-card-sub {
   font-size: 13px;
   color: #B8A88A;
