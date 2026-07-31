@@ -5,67 +5,131 @@ const redis = new Redis({
   token: process.env.KV_REST_API_TOKEN,
 });
 
-const DATA_KEY = "sessions:data";
-const EXPIRE_AFTER_START_MS = 1000 * 60 * 60 * 3;
+const ADMIN_DISCORD_ID = "1367884161393758381";
+const DATA_KEY = "team:data";
+
+function getSessionFromCookie(req) {
+  const cookieHeader = req.headers.cookie || "";
+  const match = cookieHeader.match(/solviento_session=([^;]+)/);
+  if (!match) return null;
+  try {
+    return JSON.parse(Buffer.from(match[1], "base64").toString("utf-8"));
+  } catch {
+    return null;
+  }
+}
+
+function isAdmin(session) {
+  return !!session && !!session.discord && session.discord.id === ADMIN_DISCORD_ID;
+}
+
+async function getData() {
+  const data = await redis.get(DATA_KEY);
+  if (!data) {
+    return { sections: [] };
+  }
+  return typeof data === "string" ? JSON.parse(data) : data;
+}
+
+async function saveData(data) {
+  await redis.set(DATA_KEY, JSON.stringify(data));
+}
 
 function genId() {
   return Math.random().toString(36).slice(2, 10);
 }
 
-async function getSessions() {
-  const data = await redis.get(DATA_KEY);
-  const list = data ? (typeof data === "string" ? JSON.parse(data) : data) : [];
-  const now = Date.now();
-  const fresh = list.filter((s) => {
-    const sessionStartMs = s.unixSeconds * 1000;
-    return now - sessionStartMs < EXPIRE_AFTER_START_MS;
-  });
-  if (fresh.length !== list.length) {
-    await redis.set(DATA_KEY, JSON.stringify(fresh));
-  }
-  return fresh;
-}
-
-async function saveSessions(list) {
-  await redis.set(DATA_KEY, JSON.stringify(list));
-}
-
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    const sessions = await getSessions();
-    return res.status(200).json({ sessions });
+    const data = await getData();
+    return res.status(200).json(data);
   }
 
-  if (req.method === "POST") {
-    const authHeader = req.headers.authorization || "";
-    const providedKey = authHeader.replace("Bearer ", "");
-
-    if (providedKey !== process.env.BOT_API_KEY) {
-      return res.status(403).json({ error: "Invalid API key." });
-    }
-
-    const body = req.body && typeof req.body === "object" ? req.body : JSON.parse(req.body || "{}");
-
-    if (!body.hostName || !body.category || !body.unixSeconds) {
-      return res.status(400).json({ error: "hostName, category, and unixSeconds are required." });
-    }
-
-    const sessions = await getSessions();
-    const newSession = {
-      id: body.sessionId || genId(),
-      hostName: body.hostName,
-      hostId: body.hostId || null,
-      category: body.category,
-      unixSeconds: body.unixSeconds,
-      description: body.description || "",
-      status: body.status || "Pending",
-      createdAt: Date.now(),
-    };
-    sessions.push(newSession);
-    await saveSessions(sessions);
-
-    return res.status(200).json({ session: newSession });
+  const session = getSessionFromCookie(req);
+  if (!isAdmin(session)) {
+    return res.status(403).json({ error: "Not authorized." });
   }
 
-  return res.status(405).json({ error: "Method not allowed." });
+  const body = req.body && typeof req.body === "object" ? req.body : JSON.parse(req.body || "{}");
+  const data = await getData();
+
+  if (req.method === "POST" && body.action === "addSection") {
+    data.sections.push({
+      id: genId(),
+      name: body.name || "New Section",
+      cards: [],
+    });
+    await saveData(data);
+    return res.status(200).json(data);
+  }
+
+  if (req.method === "POST" && body.action === "renameSection") {
+    const section = data.sections.find((s) => s.id === body.sectionId);
+    if (section) section.name = body.name;
+    await saveData(data);
+    return res.status(200).json(data);
+  }
+
+  if (req.method === "POST" && body.action === "deleteSection") {
+    data.sections = data.sections.filter((s) => s.id !== body.sectionId);
+    await saveData(data);
+    return res.status(200).json(data);
+  }
+
+  if (req.method === "POST" && body.action === "reorderSections") {
+    const order = body.order || [];
+    data.sections.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+    await saveData(data);
+    return res.status(200).json(data);
+  }
+
+  if (req.method === "POST" && body.action === "addCard") {
+    const section = data.sections.find((s) => s.id === body.sectionId);
+    if (section) {
+      section.cards.push({
+        id: genId(),
+        name: body.name || "New Member",
+        role: body.role || "",
+        photoUrl: body.photoUrl || "",
+        robloxUsername: body.robloxUsername || "",
+        discordUserId: body.discordUserId || "",
+        email: body.email || "",
+        inlineWith: body.inlineWith || null,
+      });
+    }
+    await saveData(data);
+    return res.status(200).json(data);
+  }
+
+  if (req.method === "POST" && body.action === "updateCard") {
+    const section = data.sections.find((s) => s.id === body.sectionId);
+    if (section) {
+      const card = section.cards.find((c) => c.id === body.cardId);
+      if (card) {
+        card.name = body.name ?? card.name;
+        card.role = body.role ?? card.role;
+        card.photoUrl = body.photoUrl ?? card.photoUrl;
+        card.robloxUsername = body.robloxUsername ?? card.robloxUsername;
+        card.discordUserId = body.discordUserId ?? card.discordUserId;
+        card.email = body.email ?? card.email;
+        card.inlineWith = body.inlineWith !== undefined ? body.inlineWith : card.inlineWith;
+      }
+    }
+    await saveData(data);
+    return res.status(200).json(data);
+  }
+
+  if (req.method === "POST" && body.action === "deleteCard") {
+    const section = data.sections.find((s) => s.id === body.sectionId);
+    if (section) {
+      section.cards = section.cards.filter((c) => c.id !== body.cardId);
+      section.cards.forEach((c) => {
+        if (c.inlineWith === body.cardId) c.inlineWith = null;
+      });
+    }
+    await saveData(data);
+    return res.status(200).json(data);
+  }
+
+  return res.status(400).json({ error: "Unknown action." });
 }
