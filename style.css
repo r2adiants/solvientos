@@ -610,16 +610,31 @@ footer {
 
 .team-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 20px;
   align-items: start;
 }
 
+@media (max-width: 420px) {
+  .team-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .team-card-row {
+    grid-column: span 1;
+  }
+}
+
 .team-card-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 20px;
   grid-column: span 2;
+}
+
+@media (min-width: 420px) {
+  .team-card-row {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .team-card {
@@ -631,7 +646,7 @@ footer {
   border: 1px solid #3A2E22;
   background-color: #1D1712;
   border-radius: 22px;
-  padding: 44px 18px 22px;
+  padding: 56px 18px 24px;
 }
 
 .team-card-avatar {
@@ -658,8 +673,8 @@ footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  margin-top: 8px;
+  gap: 4px;
+  margin-top: 18px;
 }
 
 .team-card-name {
